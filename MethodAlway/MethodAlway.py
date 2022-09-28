@@ -1,6 +1,5 @@
 import math
 
-
 def alway(n):
     d = math.floor(2 * (n ** (1.0 / 3.0)) + 1)
     if d % 2 == 0:
@@ -25,7 +24,25 @@ def alway(n):
             q -= 4
     return d
 
+def ferma(n):
+    x=math.floor(math.sqrt(n))
+    if x*x==n:
+        return x,x
+    while(1):
+        x+=1
+        if x==(n+1)/2:
+            print("n - простое")
+            return
+        else:
+            z=x*x-n
+            y=math.floor(math.sqrt(z))
+            if y*y==z:
+                return x+y,x-y
+            else:
+                continue
+
+
 
 while(1):
     num = int(input())
-    print(alway(num))
+    print(ferma(num))

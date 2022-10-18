@@ -102,9 +102,9 @@ def quad_residue(n):
     if sympy.isprime(n):
         return n
     s=[-1,2]
-    k=len(str(n))
-    if k<4:
-        k=4
+    k=len(str(n))-1
+    if k<=4:
+        k=3
     a_k=3
     b_k=5
     c_k=7
@@ -131,6 +131,7 @@ def quad_residue(n):
                 e=[]
                 a=xx+m
                 b=a*a-n
+                tmp_b=b
                 if b<0:
                     e.append(1)
                     b=-b
@@ -145,7 +146,7 @@ def quad_residue(n):
                 if b==1:
                     v.append(e)
                     arr_a.append(a)
-                    arr_b.append(b)
+                    arr_b.append(tmp_b)
                 if xx<=0:
                     xx-=1
                     xx=-xx
@@ -175,6 +176,14 @@ def quad_residue(n):
                     if x%n!=y%n and x%n!=(-y)%n:
                         res=math.gcd(x+y,n)
                         if res!=1:
+                            print("\nФакторная база на k=",k," элементов ", s)
+                            print("\nМатрица")
+                            for l in v:
+                                print(l)
+                            print("\nРешение ", rnd)
+                            print("\nМассив a ", arr_a)
+                            print("\nМассив b ", arr_b)
+                            print("\nПроизведение всех a=",x,"\nПроизведение всех b=",b)
                             return res
                 rnd[0][k]+=1
                 j=k

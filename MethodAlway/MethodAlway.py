@@ -196,7 +196,82 @@ def quad_residue(n):
             if t==k+4:
                 break
         
-#print(quad_residue(6546429))
+def arr_func(e):
+    return e[1]
+
+def get_gen(n):
+    phi=n-1
+    del_phi=[2]
+    a=3
+    b=5
+    c=7
+    while phi%2==0:
+        phi=phi//2
+    while phi!=1:
+        if phi%a==0 and sympy.isprime(a):
+            del_phi.append(a)
+            while phi%a==0:
+                phi=phi//a
+        a=b
+        b=c
+        c=a+6
+
+    g=2
+    flag=1
+    while(1):
+        if pow(g,n-1)%n==1 and pow(g,(n-1)//2)%n!=1:
+            for j in del_phi:
+                if pow(g,(n-1)//j)%n==1:
+                    g=g+1
+                    flag=0
+                    break
+            if flag:
+                return g    
+        else:
+            g=g+1
+        flag=1
+
+def gelfond(g,n,a):
+    h=math.floor(math.sqrt(n-1))+1
+    b=int(pow(g,h))%n
+    
+    gs=[]
+    tmp=1
+    for i in range(1,h+1):
+        tmp=(tmp*b)%n
+        tmp_gs=[i,tmp]
+        gs.append(tmp_gs)
+    
+    gs.sort(key=arr_func)
+    
+    u=0
+    v=0
+    tmp=a
+    for i in range(1,h+1):
+        tmp=(tmp*g)%n
+        mid=h//2
+        low=0
+        high=h-1
+
+        while gs[mid][1]!=tmp and low<=high:
+            if tmp>gs[mid][1]:
+                low=mid+1
+            else:
+                high=mid-1
+            mid=(low+high)//2
+        if low>high:
+            continue
+        else:
+            v=i
+            u=gs[mid][0]
+            break
+    return (h*u-v)%(n-1)
+
+
 while(1):
-    num = int(input())
-    print("Ответ: ",quad_residue(num))
+    n = int(input("Ввод n="))
+    a = int(input("Ввод a="))
+    g=get_gen(n)
+    x=gelfond(g,n,a)
+    print("Образующий =",g,"\nИскомый показатель =",x)
+    print("Проверка",g,"^",x,"=",pow(g,x)%n,"(mod",n,")\n")

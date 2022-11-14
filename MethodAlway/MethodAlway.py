@@ -13,7 +13,6 @@ def alway(n: int) -> int:
     r1 = n % d
     r2 = n % (d - 2)
     s = math.ceil(n ** (0.5))
-
     while r1 != 0:
         d += 2
         if d > s:
@@ -58,7 +57,6 @@ def polard(n):
     a = 2
     b = 2
     c = 1
-
     while 1:
         a = fxc(a, c, n)
         b = fxc(fxc(b, c, n), c, n)
@@ -71,7 +69,6 @@ def polard(n):
             else:
                 print("Без результата")
                 return
-
         d = math.gcd(abs(a - b), n)
         if d == 1:
             continue
@@ -226,7 +223,6 @@ def get_gen(n):
         a = b
         b = c
         c = a + 6
-
     g = 2
     flag = 1
     while 1:
@@ -246,24 +242,19 @@ def get_gen(n):
 def gelfond(g, n, a):
     h = math.floor(math.sqrt(n - 1)) + 1
     b = int(pow(g, h)) % n
-
     gs = []
+    tmp = 1
     for i in range(1, h + 1):
         tmp = (tmp * b) % n
         tmp_gs = [i, tmp]
         gs.append(tmp_gs)
-
     gs.sort(key=arr_func)
-
-    u = 0
-    v = 0
     tmp = a
     for i in range(1, h + 1):
         tmp = (tmp * g) % n
         mid = h // 2
         low = 0
         high = h - 1
-
         while gs[mid][1] != tmp and low <= high:
             if tmp > gs[mid][1]:
                 low = mid + 1
@@ -280,9 +271,6 @@ def gelfond(g, n, a):
 
 
 def func_f(x, y, b, g, n, a):
-    x1 = 0
-    y1 = 0
-    b1 = 0
     if x % 3 == 1:
         x1 = (a * x) % n
         y1 = y
@@ -295,24 +283,7 @@ def func_f(x, y, b, g, n, a):
         x1 = (g * x) % n
         y1 = (y + 1) % (n - 1)
         b1 = b
-
     return x1, y1, b1
-
-
-def p_mod_1(x, n):
-    u1 = n
-    u2 = 0
-    v1 = x
-    v2 = 1
-    while v1 != 0:
-        q = u1 // v1
-        t1 = u1 % v1
-        t2 = u2 - q * v2
-        u1 = v1
-        v1 = t1
-        u2 = v2
-        v2 = t2
-    return u2 % n
 
 
 def p_Pollard(g, n, a):
@@ -328,7 +299,7 @@ def p_Pollard(g, n, a):
     if r == 0:
         return
     d = math.gcd(r, (n - 1))
-    x = (p_mod_1(r // d, (n - 1) // d) * (y2 - y1) // d) % ((n - 1) // d)
+    x = (pow(r // d, -1, (n - 1) // d) * (y2 - y1) // d) % ((n - 1) // d)
     if pow(g, x) % n == a:
         return x
     for k in range(1, d):

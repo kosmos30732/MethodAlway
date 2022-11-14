@@ -248,7 +248,6 @@ def gelfond(g, n, a):
     b = int(pow(g, h)) % n
 
     gs = []
-    tmp = 1
     for i in range(1, h + 1):
         tmp = (tmp * b) % n
         tmp_gs = [i, tmp]

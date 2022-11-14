@@ -329,7 +329,7 @@ def p_Pollard(g, n, a):
     if r == 0:
         return
     d = math.gcd(r, (n - 1))
-    x = (p_mod_1(r // 2, (n - 1) // d) * (y2 - y1) // d) % ((n - 1) // d)
+    x = (p_mod_1(r // d, (n - 1) // d) * (y2 - y1) // d) % ((n - 1) // d)
     if pow(g, x) % n == a:
         return x
     for k in range(1, d):
@@ -343,6 +343,10 @@ while 1:
     a = int(input("Ввод a="))
     g = int(input("Ввод g="))
     print(p_Pollard(g, n, a), "\n")
+
+    x = gelfond(g, n, a)
+    print("\nОбразующий =", g, "\nИскомый показатель =", x)
+    print("Проверка", g, "^", x, "=", pow(g, x) % n, "(mod", n, ")\n")
 
 # while 1:
 #    n = int(input("Ввод n="))

@@ -1,9 +1,11 @@
 import math
 import random
-from tkinter import N
 import sympy
 import numpy
+import time
+#import taichi as ti
 
+#ti.init(arch=ti.cpu)
 
 def alway(n: int) -> int:
     d = math.floor(2 * (n ** (1.0 / 3.0)) + 1)
@@ -302,22 +304,21 @@ def p_Pollard(g, n, a):
     x = (pow(r // d, -1, (n - 1) // d) * (y2 - y1) // d) % ((n - 1) // d)
     if pow(g, x) % n == a:
         return x
+    x_0=x
     for k in range(1, d):
-        x = x + (n - 1) // d * k
+        x = x_0 + (n - 1) // d * k
         if pow(g, x) % n == a:
             return x
 
 
 while 1:
-    n = int(input("Ввод n="))
-    a = int(input("Ввод a="))
-    g = int(input("Ввод g="))
-    print(p_Pollard(g, n, a), "\n")
-
+    n = int(input("ввод n="))
+    a = int(input("ввод a="))
+    g = int(input("ввод g="))
+    print("\nполард ",p_Pollard(g, n, a))
     x = gelfond(g, n, a)
-    print("\nОбразующий =", g, "\nИскомый показатель =", x)
-    print("Проверка", g, "^", x, "=", pow(g, x) % n, "(mod", n, ")\n")
-
+    print("\nобразующий =", g, "\nгельфонд ", x)
+    print("проверка", g, "^", x, "=", pow(g, x) % n, "(mod", n, ")\n")
 # while 1:
 #    n = int(input("Ввод n="))
 #    a = int(input("Ввод a="))

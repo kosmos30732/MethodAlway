@@ -2,9 +2,10 @@ import math
 import random
 import sympy
 import numpy
-import time
+from sympy.abc import x
+from sympy import degree, GF, rem, gcd
+from sympy.ntheory import factorint
 #import taichi as ti
-
 #ti.init(arch=ti.cpu)
 
 def alway(n: int) -> int:
@@ -311,18 +312,63 @@ def p_Pollard(g, n, a):
             return x
 
 
-while 1:
-    n = int(input("ввод n="))
-    a = int(input("ввод a="))
-    g = int(input("ввод g="))
-    print("\nполард ",p_Pollard(g, n, a))
-    x = gelfond(g, n, a)
-    print("\nобразующий =", g, "\nгельфонд ", x)
-    print("проверка", g, "^", x, "=", pow(g, x) % n, "(mod", n, ")\n")
-# while 1:
-#    n = int(input("Ввод n="))
-#    a = int(input("Ввод a="))
-#    g = int(input("Ввод g="))
-#    x = gelfond(g, n, a)
-#    print("Образующий =", g, "\nИскомый показатель =", x)
-#    print("Проверка", g, "^", x, "=", pow(g, x) % n, "(mod", n, ")\n")
+def gcd_polinom(f,g,mod):
+    if len(g)>len(f):
+        g,f=f,g
+    while(1):
+        f=f%mod
+        g=g%mod
+        g_tmp=g
+        while(1):
+            
+            g=g*f[0]
+            for i in range(len(f)-len(g)):
+                g=numpy.append(g,0)
+            r=f-g
+            r=r%mod
+            count=0
+            for i in r:
+                if i==0:
+                    count+=1
+                else:
+                    break
+            r=r[count:]
+            g=g_tmp
+            if len(r)<len(g):
+                break
+            else:
+                f=r
+        f=g
+        g=r
+        if len(g)==0:
+            return f
+        if len(g)==1 and g[0]==1:
+            return numpy.array([1])
+   
+#print(sympy.polys.galoistools.gf_gcdex(ZZ.map([1,0,-4,0,0,-1,0,4]),ZZ.map([1,-4,-1,0,4]),13,ZZ))
+
+def privodim(f, p):
+    u=x
+    count=degree(f)//2
+    while(count):
+        u=rem(pow(u,p),f,domain=GF(p))
+        d=gcd(f,u-x,domain=GF(p))
+        if d!=1:
+            return "приводим"
+        count-=1
+    return "неприводим"
+
+def primitiv(g,p):
+    p_n=pow(p,degree(g))
+    p_all=factorint(p_n-1)
+    for p_i in p_all:
+        r=rem(pow(x,(p_n-1)/p_i),g,domain=GF(p))
+        if r==1:
+            return "непримитивный"
+    return "примитивный"
+
+while(1):
+    f=sympy.Poly(input("Введите полином= "))
+    p=int(input("Введите p (Z_p)= "))
+    print(privodim(f,p))
+    print(primitiv(f,p))

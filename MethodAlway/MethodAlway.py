@@ -2,11 +2,13 @@ import math
 import random
 import sympy
 import numpy
+from sympy import degree, GF, rem, gcd, Poly
 from sympy.abc import x
-from sympy import degree, GF, rem, gcd
 from sympy.ntheory import factorint
-#import taichi as ti
-#ti.init(arch=ti.cpu)
+
+# import taichi as ti
+# ti.init(arch=ti.cpu)
+
 
 def alway(n: int) -> int:
     d = math.floor(2 * (n ** (1.0 / 3.0)) + 1)
@@ -305,70 +307,79 @@ def p_Pollard(g, n, a):
     x = (pow(r // d, -1, (n - 1) // d) * (y2 - y1) // d) % ((n - 1) // d)
     if pow(g, x) % n == a:
         return x
-    x_0=x
+    x_0 = x
     for k in range(1, d):
         x = x_0 + (n - 1) // d * k
         if pow(g, x) % n == a:
             return x
 
 
-def gcd_polinom(f,g,mod):
-    if len(g)>len(f):
-        g,f=f,g
-    while(1):
-        f=f%mod
-        g=g%mod
-        g_tmp=g
-        while(1):
-            
-            g=g*f[0]
-            for i in range(len(f)-len(g)):
-                g=numpy.append(g,0)
-            r=f-g
-            r=r%mod
-            count=0
+def gcd_polinom(f, g, mod):
+    if len(g) > len(f):
+        g, f = f, g
+    while 1:
+        f = f % mod
+        g = g % mod
+        g_tmp = g
+        while 1:
+
+            g = g * f[0]
+            for i in range(len(f) - len(g)):
+                g = numpy.append(g, 0)
+            r = f - g
+            r = r % mod
+            count = 0
             for i in r:
-                if i==0:
-                    count+=1
+                if i == 0:
+                    count += 1
                 else:
                     break
-            r=r[count:]
-            g=g_tmp
-            if len(r)<len(g):
+            r = r[count:]
+            g = g_tmp
+            if len(r) < len(g):
                 break
             else:
-                f=r
-        f=g
-        g=r
-        if len(g)==0:
+                f = r
+        f = g
+        g = r
+        if len(g) == 0:
             return f
-        if len(g)==1 and g[0]==1:
+        if len(g) == 1 and g[0] == 1:
             return numpy.array([1])
-   
-#print(sympy.polys.galoistools.gf_gcdex(ZZ.map([1,0,-4,0,0,-1,0,4]),ZZ.map([1,-4,-1,0,4]),13,ZZ))
+
+
+# print(sympy.polys.galoistools.gf_gcdex(ZZ.map([1,0,-4,0,0,-1,0,4]),ZZ.map([1,-4,-1,0,4]),13,ZZ))
+
 
 def privodim(f, p):
-    u=x
-    count=degree(f)//2
-    while(count):
-        u=rem(pow(u,p),f,domain=GF(p))
-        d=gcd(f,u-x,domain=GF(p))
-        if d!=1:
+    u = x
+    count = degree(f) // 2
+    while count:
+        u = rem(pow(u, p), f, domain=GF(p))
+        d = gcd(f, u - x, domain=GF(p))
+        if d != 1:
             return "приводим"
-        count-=1
+        count -= 1
     return "неприводим"
 
-def primitiv(g,p):
-    p_n=pow(p,degree(g))
-    p_all=factorint(p_n-1)
+
+def primitiv(g, p):
+    p_n = pow(p, degree(g))
+    p_all = factorint(p_n - 1)
     for p_i in p_all:
-        r=rem(pow(x,(p_n-1)/p_i),g,domain=GF(p))
-        if r==1:
+        r = rem(pow(x, (p_n - 1) / p_i), g, domain=GF(p))
+        print(r,"\n")
+        if r == 1:
             return "непримитивный"
     return "примитивный"
 
-while(1):
-    f=sympy.Poly(input("Введите полином= "))
-    p=int(input("Введите p (Z_p)= "))
-    print(privodim(f,p))
-    print(primitiv(f,p))
+
+while 1:
+    f = input("Введите коэф. полинома= ")
+    f = Poly.from_list(list(map(int, f.split())), x)
+    p = int(input("Введите p (Z_p)= "))
+    hh=privodim(f, p)
+    print(hh)
+    if hh=="неприводим":
+        print(primitiv(f, p))
+    
